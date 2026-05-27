@@ -1,0 +1,27 @@
+[package]
+name = "codecs-node"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "napi-rs bindings for @brashkie/media-codecs"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+mcd-core = { workspace = true }
+napi = { workspace = true }
+napi-derive = { workspace = true }
+bytes = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread"] }
+
+[build-dependencies]
+napi-build = { workspace = true }
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "warn"

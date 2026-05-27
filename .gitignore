@@ -1,0 +1,48 @@
+# ─── Build artifacts ─────────────────────────────────────────────────────────
+/target
+/dist
+/coverage
+.tsbuildinfo
+*.tsbuildinfo
+*.node
+
+# ─── Dependencies ────────────────────────────────────────────────────────────
+/node_modules
+/.pnp
+/.pnp.js
+
+# ─── Per-platform npm packages (regenerated) ────────────────────────────────
+/npm
+
+# ─── Environment / secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Editor / IDE ────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ─── Rust ────────────────────────────────────────────────────────────────────
+**/*.rs.bk
+*.pdb
+
+# ─── Local notes ─────────────────────────────────────────────────────────────
+/.scratch
+*.local.md
+
+# ─── Allow list ──────────────────────────────────────────────────────────────
+# index.js and index.d.ts ARE tracked as placeholders.
+# media/ folder IS tracked.

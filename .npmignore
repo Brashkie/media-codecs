@@ -1,0 +1,44 @@
+# Source code (we ship dist/)
+src/
+crates/
+__tests__/
+examples/
+scripts/
+docs/
+benches/
+
+# Build artifacts
+target/
+coverage/
+node_modules/
+*.tsbuildinfo
+
+# Per-platform npm folder
+npm/
+
+# Tooling
+.github/
+.vscode/
+.editorconfig
+.eslintrc*
+.prettierrc*
+.gitignore
+.gitattributes
+tsup.config.ts
+vitest.config.ts
+tsconfig.json
+Cargo.toml
+Cargo.lock
+rust-toolchain.toml
+build.rs
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Internal docs
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+docs/

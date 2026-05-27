@@ -1,0 +1,41 @@
+[package]
+name = "mcd-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Core codec framework for @brashkie/media-codecs — registry, traits, PCM"
+readme = "../../README.md"
+keywords = ["codec", "media", "audio", "video", "pcm"]
+categories = ["multimedia::encoding", "multimedia::audio"]
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+bytes = { workspace = true }
+parking_lot = { workspace = true }
+arc-swap = { workspace = true }
+thiserror = { workspace = true }
+bitflags = { workspace = true }
+once_cell = { workspace = true }
+tracing = { workspace = true }
+bytemuck = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tracing-subscriber = { workspace = true }
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "warn"
+missing_docs = "warn"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
