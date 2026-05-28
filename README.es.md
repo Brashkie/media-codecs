@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="media/logo.png" alt="Kryx media-codecs" width="200" />
+
 **Framework de codecs del ecosistema multimedia [Kryx](https://kryx.dev)**
 
 Encoders y decoders enchufables · PCM nativo · Construido sobre `@brashkie/media-core`
