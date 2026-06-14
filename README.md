@@ -1,191 +1,92 @@
 <div align="center">
 
-<img src="media/logo.png" alt="Kryx media-codecs" width="200" />
-
-**Codec framework for the [Kryx](https://kryx.dev) multimedia ecosystem**
-
-Pluggable encoders & decoders · Built-in PCM · Built on `@brashkie/media-core`
-
-[![CI](https://github.com/Brashkie/media-codecs/actions/workflows/ci.yml/badge.svg)](https://github.com/Brashkie/media-codecs/actions)
-[![npm version](https://img.shields.io/npm/v/@brashkie/media-codecs?color=cb3837&logo=npm)](https://npmjs.com/package/@brashkie/media-codecs)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![node ≥18](https://img.shields.io/badge/node-%E2%89%A518-3c873a?logo=node.js)](https://nodejs.org)
-
-**English** · [Español](README.es.md) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Changelog](CHANGELOG.md)
+# ⚠️ @brashkie/media-codecs — DEPRECATED ⚠️
 
 </div>
 
+> [!WARNING]
+> ### This package has been moved to [`@kryxjs/codecs`](https://www.npmjs.com/package/@kryxjs/codecs)
+>
+> Development continues at **[`github.com/Brashkie/kryx-codecs`](https://github.com/Brashkie/kryx-codecs)**.
+>
+> No new features will be added here. Only critical security fixes (if any) until end of 2026.
+
 ---
 
-## What is this?
-
-`@brashkie/media-codecs` is the **codec layer** of [Kryx](https://kryx.dev). It provides:
-
-- A pluggable **registry** for runtime codec lookup
-- Async `Decoder` / `Encoder` classes with a uniform API
-- Built-in **PCM** codecs (s16le, s32le, f32le, f64le)
-- Foundation for the upcoming Opus, AAC, H264, AV1 implementations
-
-It does **not** include heavyweight codecs yet — those land in v0.2+ as separate codec modules backed by Zig. The PCM codecs are the reference implementation of the codec protocol.
+## 🚀 Migrate now
 
 ```bash
-npm install @brashkie/media-codecs
+npm uninstall @brashkie/media-codecs @brashkie/media-core
+npm install @kryxjs/codecs @kryxjs/core
 ```
 
-```ts
-import { createDecoder, createEncoder, registry } from '@brashkie/media-codecs'
+Update your imports:
 
-// Inspect what's available
-console.log(registry().names())
-// → ['pcm_f32le', 'pcm_f64le', 'pcm_s16le', 'pcm_s32le']
-
-// PCM round-trip
-const enc = createEncoder('pcm_s16le', { channels: 2, sampleRate: 48_000 })
-const dec = createDecoder('pcm_s16le', { channels: 2, sampleRate: 48_000 })
-
-const pkt = await enc.encode({
-  payload: Buffer.alloc(8),
-  pts: 0, dts: 0, isKeyframe: true, duration: 0,
-})
-
-const frame = await dec.decode(pkt.payload, pkt.pts)
-console.log(frame.pts, frame.duration) // → 0, 2
+```diff
+- import { createDecoder, CodecRegistry } from '@brashkie/media-codecs'
+- import { MediaError } from '@brashkie/media-core'
++ import { createDecoder, CodecRegistry } from '@kryxjs/codecs'
++ import { MediaError } from '@kryxjs/core'
 ```
+
+That's it. The public TypeScript API is **identical** — only the package names change.
+
+📖 **[Full migration guide](https://github.com/Brashkie/kryx-codecs/blob/main/docs/MIGRATION.md)**
 
 ---
 
-## Why?
+## What's the difference?
 
-| | |
-|---|---|
-| 🔌 **Pluggable** | New codecs register at startup — public API never changes |
-| ⚡ **Async-first** | All decode/encode calls return Promises — backpressure-friendly |
-| 🎯 **Zero-cost for PCM** | Validates + tags metadata, no actual copy |
-| 🧩 **Built on media-core** | Reuses `MediaError`, same ecosystem |
-| 🔒 **Type-safe** | TypeScript 6.0 strict + auto-generated `.d.ts` |
-| 📦 **Dual-package** | ESM + CJS, with proper exports map |
-| 🌐 **Cross-platform** | Windows, macOS, Linux on x64 and arm64 |
+| Aspect | `@brashkie/media-codecs@0.1.0` | `@kryxjs/codecs@0.1.0` |
+|--------|-------------------------------|-----------------------|
+| Status | 🔴 Deprecated | 🟢 Active development |
+| Repo | `Brashkie/media-codecs` | [`Brashkie/kryx-codecs`](https://github.com/Brashkie/kryx-codecs) |
+| Depends on | `@brashkie/media-core@^0.1.4` | `@kryxjs/core@^0.1.0` |
+| TypeScript API | identical | identical |
+| Future features | ❌ none | ✅ all new work happens here |
 
----
-
-## Core concepts
-
-### Registry
-
-```ts
-import { registry, CodecKind } from '@brashkie/media-codecs'
-
-const reg = registry()
-
-reg.names()              // string[] — all registered codec names
-reg.has('pcm_s16le')     // boolean
-reg.find('pcm_s16le')    // CodecDescriptor | null
-reg.list('audio')        // CodecDescriptor[] filtered by kind
-```
-
-### Decoder
-
-```ts
-import { createDecoder } from '@brashkie/media-codecs'
-
-const dec = createDecoder('pcm_s16le', {
-  sampleRate: 48_000,
-  channels: 2,
-})
-
-const frame = await dec.decode(encodedBytes, /* pts */ 90_000)
-console.log(frame.pts, frame.duration, frame.isKeyframe)
-
-const trailing = await dec.flush()  // drain at EOS
-await dec.reset()                    // after a seek
-```
-
-### Encoder
-
-```ts
-import { createEncoder } from '@brashkie/media-codecs'
-
-const enc = createEncoder('pcm_f32le', {
-  sampleRate: 48_000,
-  channels: 2,
-})
-
-const packet = await enc.encode({
-  payload: rawSamples,
-  pts: 0, dts: 0, isKeyframe: true, duration: 0,
-})
-```
-
-### Error handling
-
-```ts
-import { CodecError } from '@brashkie/media-codecs'
-import { MediaError } from '@brashkie/media-core'
-
-try {
-  await dec.decode(badBytes)
-} catch (err) {
-  if (err instanceof CodecError) {
-    console.log(err.codecKind) // "invalid_data", "not_found", ...
-  }
-  if (MediaError.is(err)) {
-    console.log(err.kind)      // shared with the rest of Kryx
-  }
-}
-```
+The successor package is part of the broader **[Kryx](https://github.com/Brashkie/kryx-core)** ecosystem — a modular alternative to FFmpeg for Node.js, organized under the `@kryxjs/*` scope.
 
 ---
 
-## Built-in codecs (v0.1)
+## Why the rename?
 
-| Name | Long name | Kind | Encode | Decode |
-|------|-----------|------|--------|--------|
-| `pcm_s16le` | PCM signed 16-bit little-endian | audio | ✅ | ✅ |
-| `pcm_s32le` | PCM signed 32-bit little-endian | audio | ✅ | ✅ |
-| `pcm_f32le` | PCM 32-bit float little-endian   | audio | ✅ | ✅ |
-| `pcm_f64le` | PCM 64-bit float little-endian   | audio | ✅ | ✅ |
+The `@kryxjs/*` scope groups all packages of the Kryx ecosystem together (`@kryxjs/core`, `@kryxjs/codecs`, `@kryxjs/codecs-opus`, etc.), making the ecosystem easier to discover and maintain.
 
-All are lossless, stateless (except for the PTS counter), and validated against frame alignment.
+`@brashkie/media-codecs` was the prototype name. `@kryxjs/codecs` is the production name.
 
 ---
 
-## Roadmap
+## What did NOT change
 
-See [docs/ROADMAP.md](docs/ROADMAP.md). Next up:
-
-- **v0.2** — Opus (first Zig-backed codec)
-- **v0.3** — AAC + FLAC
-- **v0.4** — H264 decoder
-- **v0.5** — Hardware acceleration
-- **v0.6** — AV1 + VP9
-- **v1.0** — Stable API
-
----
-
-## Development
-
-```bash
-git clone https://github.com/Brashkie/media-codecs.git
-cd media-codecs
-npm install
-npm run build:debug
-npm test
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+- Public TypeScript API (every class, function, type, signature)
+- `Codec` / `Decoder` / `Encoder` traits
+- `CodecRegistry` global singleton API
+- Built-in PCM codecs (`pcm_s16le`, `pcm_s32le`, `pcm_f32le`, `pcm_f64le`)
+- `CodecError` hierarchy
+- ESM + CJS dual format
+- Per-platform native binaries (7 platforms)
+- Node.js ≥18 requirement
 
 ---
 
-## License
+## Status
 
-[Apache-2.0](LICENSE) © 2026 [Brashkie](https://github.com/Brashkie)
+- `@brashkie/media-codecs@0.1.0` is the **last functional version** (now deprecated).
+- No new features will land here. Only critical security fixes (if any) until end of 2026.
+
+---
+
+## Need help migrating?
+
+[Open a discussion on the new repo](https://github.com/Brashkie/kryx-codecs/discussions) or [file an issue](https://github.com/Brashkie/kryx-codecs/issues).
 
 ---
 
 <div align="center">
 
-Made with 🦀 + ⚡ for the modern multimedia web.
+**👉 Go to [`@kryxjs/codecs`](https://www.npmjs.com/package/@kryxjs/codecs) 👈**
 
-[Website](https://kryx.dev) · [Issues](https://github.com/Brashkie/media-codecs/issues)
+[English](README.md) · [Español](README.es.md)
 
 </div>
