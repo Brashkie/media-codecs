@@ -1,7 +1,7 @@
 {
   "name": "@brashkie/media-codecs",
-  "version": "0.1.0",
-  "description": "Codec framework for the Kryx multimedia ecosystem — registry, decoder/encoder traits, and built-in PCM codecs (s16le, s32le, f32le, f64le)",
+  "version": "0.1.1",
+  "description": "[DEPRECATED] Migrated to @kryxjs/codecs. Run: npm install @kryxjs/codecs. See https://github.com/Brashkie/kryx-codecs",
   "type": "commonjs",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -57,6 +57,9 @@
     "CHANGELOG.md"
   ],
   "keywords": [
+    "deprecated",
+    "moved",
+    "kryxjs",
     "codec",
     "decoder",
     "encoder",
@@ -77,9 +80,9 @@
     "url": "https://github.com/Brashkie/media-codecs.git"
   },
   "bugs": {
-    "url": "https://github.com/Brashkie/media-codecs/issues"
+    "url": "https://github.com/Brashkie/kryx-codecs/issues"
   },
-  "homepage": "https://github.com/Brashkie/media-codecs#readme",
+  "homepage": "https://github.com/Brashkie/kryx-codecs#readme",
   "engines": {
     "node": ">= 18"
   },
@@ -99,13 +102,13 @@
     "@brashkie/media-core": "^0.1.4"
   },
   "optionalDependencies": {
-    "@brashkie/media-codecs-win32-x64-msvc": "0.1.0",
-    "@brashkie/media-codecs-win32-arm64-msvc": "0.1.0",
-    "@brashkie/media-codecs-darwin-x64": "0.1.0",
-    "@brashkie/media-codecs-darwin-arm64": "0.1.0",
-    "@brashkie/media-codecs-linux-x64-gnu": "0.1.0",
-    "@brashkie/media-codecs-linux-x64-musl": "0.1.0",
-    "@brashkie/media-codecs-linux-arm64-gnu": "0.1.0"
+    "@brashkie/media-codecs-win32-x64-msvc": "0.1.1",
+    "@brashkie/media-codecs-win32-arm64-msvc": "0.1.1",
+    "@brashkie/media-codecs-darwin-x64": "0.1.1",
+    "@brashkie/media-codecs-darwin-arm64": "0.1.1",
+    "@brashkie/media-codecs-linux-x64-gnu": "0.1.1",
+    "@brashkie/media-codecs-linux-x64-musl": "0.1.1",
+    "@brashkie/media-codecs-linux-arm64-gnu": "0.1.1"
   },
   "devDependencies": {
     "@napi-rs/cli": "2.18.4",
